@@ -1,47 +1,44 @@
 <script setup>
-import { ref, computed, toRef } from 'vue'
-import TreeMenu from './TreeMenu.vue'
+import { ref, computed, toRef, reactive  } from "vue";
+import TreeMenu from "./TreeMenu.vue";
 
-defineProps({
+const props = defineProps({
   name: String,
   children: Array,
-  level: Number
-})
-
-const isShow = ref(false)
+  depth: Number,
+});
+let isShow = ref(false);
 const canClick = computed(() => {
   return {
-    category: this.children,
-    book: !this.children
-  }
-})
-console.log(this.level, 'this.dept')
-const computedlevel = toRef(this.level)
+    category: props.children,
+    book: !props.children,
+  };
+});
 const indent = computed(() => {
   return {
-    transform: `translate(${computedlevel * 30}px)`
-  }
-})
+    transform: `translate(${props.depth * 30}px)`,
+  };
+});
 
 const toggleExpand = function () {
-  this.isShow = !this.isShow
-}
+  isShow.value = !isShow.value;
+};
 </script>
 
 <template>
   <div class="tree-menu">
     <div :style="indent" :class="canClick" @click="toggleExpand">
       {{ name }}
-      <span v-if="children">&nbsp;{{ isShow ? '[-]' : '[+]' }}</span>
+      <span v-if="children">&nbsp;{{ isShow ? "[-]" : "[+]" }}</span>
     </div>
-      <!-- <tree-menu  v-if="isShow"
+    <tree-menu  v-if="isShow"
         v-for="(child, idx) in children"
         :children="child.children"
         :name="child.name"
         :level="level + 1"
         :key="`${idx}_${depth}`"
       >
-      </tree-menu> -->
+      </tree-menu>
   </div>
 </template>
 

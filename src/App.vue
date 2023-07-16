@@ -1,243 +1,257 @@
 <script setup>
-import { reactive, ref, computed, onMounted, watch } from "vue";
-import TreeMenu from "./components/TreeMenu.vue";
+import { reactive, ref, computed, onMounted, watch } from 'vue'
+import TreeMenu from './components/TreeMenu.vue'
 const booklist = reactive([
   {
-    name: "我的書櫃",
+    name: '我的書櫃',
     isActive: false,
     children: [
       {
-        name: "言情",
+        name: '言情',
         isActive: false,
         children: [
           {
-            name: "西方",
+            name: '西方',
             isActive: false,
             children: [
               {
-                name: "決戰王妃",
-                isActive: false,
+                name: '決戰王妃',
+                isActive: false
               },
               {
-                name: "暮光之城",
-                isActive: false,
-              },
-            ],
+                name: '暮光之城',
+                isActive: false
+              }
+            ]
           },
           {
-            name: "中國古風",
+            name: '中國古風',
             isActive: false,
             children: [
               {
-                name: "宮鬥",
+                name: '宮鬥',
                 isActive: false,
                 children: [
                   {
-                    name: "甄嬛傳",
-                    isActive: false,
+                    name: '甄嬛傳',
+                    isActive: false
                   },
                   {
-                    name: "延禧攻略",
-                    isActive: false,
+                    name: '延禧攻略',
+                    isActive: false
                   },
                   {
-                    name: "如懿傳",
-                    isActive: false,
-                  },
-                ],
+                    name: '如懿傳',
+                    isActive: false
+                  }
+                ]
               },
               {
-                name: "轉生",
+                name: '轉生',
                 isActive: false,
                 children: [
                   {
-                    name: "神醫嫡女",
-                    isActive: false,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+                    name: '神醫嫡女',
+                    isActive: false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
-        name: "奇幻/科幻",
+        name: '奇幻/科幻',
         isActive: false,
         children: [
           {
-            name: "經典",
+            name: '經典',
             isActive: false,
             children: [
               {
-                name: "魔戒",
-                isActive: false,
+                name: '魔戒',
+                isActive: false
               },
               {
-                name: "基地",
-                isActive: false,
+                name: '基地',
+                isActive: false
               },
               {
-                name: "科學怪人",
-                isActive: false,
-              },
-            ],
+                name: '科學怪人',
+                isActive: false
+              }
+            ]
           },
           {
-            name: "反烏托邦",
+            name: '反烏托邦',
             isActive: false,
             children: [
               {
-                name: "我們",
-                isActive: false,
+                name: '我們',
+                isActive: false
               },
               {
-                name: "美麗新世界",
-                isActive: false,
-              },
-            ],
-          },
-        ],
+                name: '美麗新世界',
+                isActive: false
+              }
+            ]
+          }
+        ]
       },
       {
-        name: "偵探",
+        name: '偵探',
         isActive: false,
         children: [
           {
-            name: "福爾摩斯",
-            isActive: false,
-          },
-        ],
-      },
-    ],
+            name: '福爾摩斯',
+            isActive: false
+          }
+        ]
+      }
+    ]
   },
   {
-    name: "我的書櫃2",
+    name: '我的書櫃2',
     isActive: false,
     children: [
       {
-        name: "言情2",
+        name: '言情2',
         isActive: false,
         children: [
           {
-            name: "西方2",
+            name: '西方2',
             isActive: false,
             children: [
               {
-                name: "決戰王妃2",
-                isActive: false,
+                name: '決戰王妃2',
+                isActive: false
               },
               {
-                name: "暮光之城2",
-                isActive: false,
-              },
-            ],
+                name: '暮光之城2',
+                isActive: false
+              }
+            ]
           },
           {
-            name: "中國古風2",
+            name: '中國古風2',
             isActive: false,
             children: [
               {
-                name: "宮鬥2",
+                name: '宮鬥2',
                 isActive: false,
                 children: [
                   {
-                    name: "甄嬛傳2",
-                    isActive: false,
+                    name: '甄嬛傳2',
+                    isActive: false
                   },
                   {
-                    name: "延禧攻略2",
-                    isActive: false,
+                    name: '延禧攻略2',
+                    isActive: false
                   },
                   {
-                    name: "如懿傳2",
-                    isActive: false,
-                  },
-                ],
+                    name: '如懿傳2',
+                    isActive: false
+                  }
+                ]
               },
               {
-                name: "轉生2",
+                name: '轉生2',
                 isActive: false,
                 children: [
                   {
-                    name: "神醫嫡女2",
-                    isActive: false,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
+                    name: '神醫嫡女2',
+                    isActive: false
+                  }
+                ]
+              }
+            ]
+          }
+        ]
       },
       {
-        name: "奇幻/科幻2",
+        name: '奇幻/科幻2',
         isActive: false,
         children: [
           {
-            name: "經典2",
+            name: '經典2',
             isActive: false,
             children: [
               {
-                name: "魔戒2",
-                isActive: false,
+                name: '魔戒2',
+                isActive: false
               },
               {
-                name: "基地2",
-                isActive: false,
+                name: '基地2',
+                isActive: false
               },
               {
-                name: "科學怪人2",
-                isActive: false,
-              },
-            ],
+                name: '科學怪人2',
+                isActive: false
+              }
+            ]
           },
           {
-            name: "反烏托邦2",
+            name: '反烏托邦2',
             isActive: false,
             children: [
               {
-                name: "我們2",
-                isActive: false,
+                name: '我們2',
+                isActive: false
               },
               {
-                name: "美麗新世界2",
-                isActive: false,
-              },
-            ],
-          },
-        ],
+                name: '美麗新世界2',
+                isActive: false
+              }
+            ]
+          }
+        ]
       },
       {
-        name: "偵探2",
+        name: '偵探2',
         isActive: false,
         children: [
           {
-            name: "福爾摩斯2",
-            isActive: false,
-          },
-        ],
-      },
-    ],
-  },
-]);
-const depth = ref(0);
-const flatten = (arr) => {
-  const arr_ = arr.flatMap((i) => i.children);
-  console.log(arr_ ,'arr_')
-  return arr_;
-};
-const fltternMap = computed(() => {
-  return flatten(booklist);
-});
+            name: '福爾摩斯2',
+            isActive: false
+          }
+        ]
+      }
+    ]
+  }
+])
+const depth = ref(0)
+let deep = 0
+const flatten = arr => {
+  if (Array.isArray(arr)) {
+    const res = [].concat.apply(
+      arr,
+      arr.map((item, id) => {
+        item.uid = `${deep}_${id}`
+        return item.children ? flatten(item.children) : item
+      })
+    )
+    return res
+  } else {
+    return arr
+  }
+  // return Array.isArray(arr) ?  : [arr]
+}
 
-const active = ref("");
+const fltternMap = computed(() => {
+  return flatten(booklist)
+})
+
+const active = ref('')
 const activeId = ref('')
 onMounted(() => {
-  active.value = fltternMap.value[0].name;
+  active.value = fltternMap.value[0].name
   activeId.value = '0_0'
-});
+})
 watch(active, (newVal, oldVal) => {
   // console.log(newVal, oldVal)
-  const id = fltternMap.value.find((item)=> item.name === newVal && (item.isActive = true))
+  const id = fltternMap.value.find(
+    item => item.name === newVal && (item.isActive = true)
+  )
   console.log(id.isActive, fltternMap.value, 'id')
 })
 </script>
@@ -245,7 +259,7 @@ watch(active, (newVal, oldVal) => {
 <template>
   <tree-menu
     v-for="(book, idx) in booklist"
-    :name="book.name"
+    :item="book"
     :children="book.children"
     :depth="depth"
     :active="activeId"

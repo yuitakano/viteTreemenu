@@ -3,7 +3,7 @@ import { ref, computed, onMounted, nextTick } from "vue";
 import TreeMenu from "./TreeMenu.vue";
 
 const props = defineProps({
-  name: String,
+  item: Object,
   children: Array,
   depth: Number,
   active: String,
@@ -21,32 +21,35 @@ const indent = computed(() => {
   };
 });
 
-const toggleExpand = async () => {
+const toggleExpand =  () => {
   isShow.value = !isShow.value;
-  await nextTick();
+  // if (isShow.value)
+  // props.item.isActive = isShow.value
+  
 };
 onMounted(async () => {
-  console.log(props.children, "props.children");
-  // isShow.value = props.children.children ? props.children.children.find((item) => {
-  //   console.log(item ,'itemitemitem')
-  //   return item.name === props.active
-  // }) : props.children.name === props.active
-  await nextTick();
-  console.log(isShow.value, props.active, props.depth, "isShow.value");
+   await nextTick();
+  if (props.children) {
+    isShow.value = props.children.filter(item => {
+      return item.isActive == true
+    }).length > 0 || props.item.isActive
+
+  } 
+ 
 });
 </script>
 
 <template>
-  <div :class="['tree-menu', {}]">
+  <div :class="['tree-menu']">
     <div :style="indent" :class="canClick" @click="toggleExpand">
-      {{ name }}
+      {{ item.name }}
       <span v-if="children">&nbsp;{{ isShow ? "[-]" : "[+]" }}</span>
     </div>
     <tree-menu
       v-show="isShow"
       v-for="(child, idx) in children"
       :children="child.children"
-      :name="child.name"
+      :item="child"
       :depth="depth + 1"
       :key="`${idx}_${depth + 1}`"
       :data-id="`${idx}_${depth + 1}`"
@@ -57,7 +60,4 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.read-the-docs {
-  color: #888;
-}
 </style>

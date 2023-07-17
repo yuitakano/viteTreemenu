@@ -7,17 +7,18 @@
     const { store: bookStore, setBookList } = useBookStore()
     const booklist = bookStore.state.booklist
     const depth = ref(0)
-    const flatten = (arr) => {
+    const flatten = (arr, gId = -1, deep = 0) => {
         if (Array.isArray(arr)) {
+            gId != -1 && deep++
             const res = [].concat.apply(
                 arr,
                 arr.map((item, id) => {
-                    return item.children ? flatten(item.children) : { ...item }
+                    item.gId = deep === 0 ? id : gId
+                    item.deep = deep
+                    return (item.children && flatten(item.children, deep === 0 ? id : gId, deep)) || item
                 }),
             )
             return res
-        } else {
-            return arr
         }
         // return Array.isArray(arr) ?  : [arr]
     }
@@ -28,20 +29,22 @@
 
     const active = toRef(bookStore.state.active)
     const activeId = ref('')
+
+    const randomId = ref(0)
     const handleChange = async (item) => {
         console.log({ item }, 'app change')
-
-        await nextTick(() => {
-            item.isActive = true
-            fltternMap.value.map((_item) => {
-              if (_item.name === item.name) {
-                 active.value = _item.name
-              }
-              return (_item.isActive = _item.name === item.name)
-            })
-            console.log(booklist, 'change')
-            // active.value =
-        })
+        item.isActive = true
+        console.log(fltternMap, 'fltternMap')
+        // fltternMap.value.map((_item) => {
+        //     console.log(_item, '_item')
+        //     if (_item.name === item.name) {
+        //         active.value = _item.name
+        //     }
+        //     console.log(_item.gId === item.gId, ' _item.gId === item.gId')
+        //     return (_item.isActive = _item.gId === item.gId)
+        // })
+        await nextTick()
+        randomId.value = Math.random() * 100
     }
     onMounted(() => {
         active.value =
@@ -51,15 +54,17 @@
     })
     watch(active, (newVal, oldVal) => {
         console.log(newVal, oldVal)
+        const activeObj =  fltternMap.value.find((item) => item.name === newVal)
+        console.log(activeObj, 'activeObj')
         const id = fltternMap.value.map((item) => {
-            if (item.name === newVal) {
+            if (item.gId === activeObj.gId  && item.deep <= activeObj.deep) {
                 item.isActive = true
             } else {
                 item.isActive = false
             }
 
-            setBookList(booklist)
-            console.log(item, 'booklist')
+            // setBookList(booklist)
+            // console.log(item, 'booklist')
             return item
         })
         localStorage.setItem('active', newVal)
@@ -73,8 +78,9 @@
         :item="book"
         :children="book.children"
         :depth="depth"
-        :data-id="`${idx}_${depth}`"
-        @change="handleChange" />
+        :data-id="`${idx}_${depth}_${randomId}`"
+        @change="handleChange"
+        ref="MainTreeMenu" />
     <select v-model="active">
         <option v-for="item in fltternMap">{{ item.name }}</option>
     </select>

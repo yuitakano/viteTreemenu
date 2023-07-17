@@ -36,13 +36,17 @@
     }
 
     const toggleExpand = async () => {
-        isShow.value = !isShow.value
+        // isShow.value = !isShow.value
+        props.item.isActive = !props.item.isActive
         emit('change', props.item)
     }
-    const handleChange = (item) => {}
+    const handleChange = (item) => {
+        console.log('item: ', item);
+       props.item.isActive = true
+    }
     onMounted(async () => {
-        await nextTick()
-        isShow.value = props.item.isActive
+        // await nextTick()
+        // isShow.value = props.item.isActive
     })
 </script>
 
@@ -53,10 +57,10 @@
             :class="canClick"
             @click="toggleExpand">
             {{ item.name }}
-            <span v-if="children">&nbsp;{{ isShow ? '[-]' : '[+]' }}</span>
+            <span v-if="children">&nbsp;{{ item.isActive ? '[-]' : '[+]' }}</span>
         </div>
         <tree-menu
-            v-show="isShow"
+            v-show="item.isActive"
             v-for="(child, idx) in children"
             :children="child.children"
             :item="child"

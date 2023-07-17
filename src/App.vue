@@ -1,233 +1,16 @@
 <script setup>
-import { reactive, ref, computed, onMounted, watch } from 'vue'
+import { reactive, ref, computed, onMounted, watch, nextTick, toRef } from 'vue'
 import TreeMenu from './components/TreeMenu.vue'
-const booklist = reactive([
-  {
-    name: '我的書櫃',
-    isActive: false,
-    children: [
-      {
-        name: '言情',
-        isActive: false,
-        children: [
-          {
-            name: '西方',
-            isActive: false,
-            children: [
-              {
-                name: '決戰王妃',
-                isActive: false
-              },
-              {
-                name: '暮光之城',
-                isActive: false
-              }
-            ]
-          },
-          {
-            name: '中國古風',
-            isActive: false,
-            children: [
-              {
-                name: '宮鬥',
-                isActive: false,
-                children: [
-                  {
-                    name: '甄嬛傳',
-                    isActive: false
-                  },
-                  {
-                    name: '延禧攻略',
-                    isActive: false
-                  },
-                  {
-                    name: '如懿傳',
-                    isActive: false
-                  }
-                ]
-              },
-              {
-                name: '轉生',
-                isActive: false,
-                children: [
-                  {
-                    name: '神醫嫡女',
-                    isActive: false
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '奇幻/科幻',
-        isActive: false,
-        children: [
-          {
-            name: '經典',
-            isActive: false,
-            children: [
-              {
-                name: '魔戒',
-                isActive: false
-              },
-              {
-                name: '基地',
-                isActive: false
-              },
-              {
-                name: '科學怪人',
-                isActive: false
-              }
-            ]
-          },
-          {
-            name: '反烏托邦',
-            isActive: false,
-            children: [
-              {
-                name: '我們',
-                isActive: false
-              },
-              {
-                name: '美麗新世界',
-                isActive: false
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '偵探',
-        isActive: false,
-        children: [
-          {
-            name: '福爾摩斯',
-            isActive: false
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: '我的書櫃2',
-    isActive: false,
-    children: [
-      {
-        name: '言情2',
-        isActive: false,
-        children: [
-          {
-            name: '西方2',
-            isActive: false,
-            children: [
-              {
-                name: '決戰王妃2',
-                isActive: false
-              },
-              {
-                name: '暮光之城2',
-                isActive: false
-              }
-            ]
-          },
-          {
-            name: '中國古風2',
-            isActive: false,
-            children: [
-              {
-                name: '宮鬥2',
-                isActive: false,
-                children: [
-                  {
-                    name: '甄嬛傳2',
-                    isActive: false
-                  },
-                  {
-                    name: '延禧攻略2',
-                    isActive: false
-                  },
-                  {
-                    name: '如懿傳2',
-                    isActive: false
-                  }
-                ]
-              },
-              {
-                name: '轉生2',
-                isActive: false,
-                children: [
-                  {
-                    name: '神醫嫡女2',
-                    isActive: false
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '奇幻/科幻2',
-        isActive: false,
-        children: [
-          {
-            name: '經典2',
-            isActive: false,
-            children: [
-              {
-                name: '魔戒2',
-                isActive: false
-              },
-              {
-                name: '基地2',
-                isActive: false
-              },
-              {
-                name: '科學怪人2',
-                isActive: false
-              }
-            ]
-          },
-          {
-            name: '反烏托邦2',
-            isActive: false,
-            children: [
-              {
-                name: '我們2',
-                isActive: false
-              },
-              {
-                name: '美麗新世界2',
-                isActive: false
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: '偵探2',
-        isActive: false,
-        children: [
-          {
-            name: '福爾摩斯2',
-            isActive: false
-          }
-        ]
-      }
-    ]
-  }
-])
+import { useBookStore } from './store/useStore'
+const { store: bookStore, setBookList } = useBookStore()
+const booklist = bookStore.state.booklist
 const depth = ref(0)
-let deep = 0
 const flatten = arr => {
   if (Array.isArray(arr)) {
     const res = [].concat.apply(
       arr,
       arr.map((item, id) => {
-        item.uid = `${deep}_${id}`
-        return item.children ? flatten(item.children) : item
+        return item.children ? flatten(item.children) : { ...item}
       })
     )
     return res
@@ -241,18 +24,35 @@ const fltternMap = computed(() => {
   return flatten(booklist)
 })
 
-const active = ref('')
+const active = toRef(bookStore.state.active)
 const activeId = ref('')
+const handleChange = (item) => {
+  console.log({item}, 'app change')
+  item.isActive = true
+    fltternMap.value.find(_item => _item.name === item.name && (_item.isActive = true))
+    console.log(booklist, 'change')
+}
 onMounted(() => {
-  active.value = fltternMap.value[0].name
-  activeId.value = '0_0'
+  active.value =
+    fltternMap.value.find(item => item.name === active.value && (item.isActive = true))?.name ||
+    fltternMap.value[0].name
+  console.log(active, 'active')
 })
-watch(active, (newVal, oldVal) => {
-  // console.log(newVal, oldVal)
-  const id = fltternMap.value.find(
-    item => item.name === newVal && (item.isActive = true)
-  )
-  console.log(id.isActive, fltternMap.value, 'id')
+watch(active,  (newVal, oldVal) => {
+  console.log(newVal, oldVal)
+  const id = fltternMap.value.map( item => {
+    if (item.name === newVal) {
+      item.isActive = true
+    } else {
+      item.isActive = false
+    }
+
+    setBookList(booklist)
+    console.log(item, 'booklist')
+    return item
+  })
+  localStorage.setItem('active', newVal)
+  console.log(id, fltternMap.value, 'id')
 })
 </script>
 
@@ -262,8 +62,8 @@ watch(active, (newVal, oldVal) => {
     :item="book"
     :children="book.children"
     :depth="depth"
-    :active="activeId"
     :data-id="`${idx}_${depth}`"
+      @change="handleChange"
   />
   <select v-model="active">
     <option v-for="item in fltternMap">{{ item.name }}</option>

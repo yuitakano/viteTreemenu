@@ -228,8 +228,13 @@ const setBookList =  (booklist) => {
     store.state.booklist = booklist;
 };
 
+const updateActive = (active) => {
+    store.state.active = active;
+}
+
 
 export const useBookStore = () => ({
     store,
     setBookList,
+    updateActive,
 });

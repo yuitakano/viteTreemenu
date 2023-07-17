@@ -31,15 +31,14 @@ const fltternMap = computed(() => {
   return flatten(booklist)
 })
 
-const active = ref('')
+const active = toRef(bookStore.state.active)
 const activeId = ref('')
 
 const randomId = ref(0)
-const handleChange = async item => {
+const handleChange =  item => {
   console.log({ item }, 'app change')
   // item.isActive = !item.isActive
   active.value = item.name
-  console.log(fltternMap, 'fltternMap')
   // fltternMap.value.map((_item) => {
   //     console.log(_item, '_item')
   //     if (_item.name === item.name) {
@@ -48,7 +47,7 @@ const handleChange = async item => {
   //     console.log(_item.gId === item.gId, ' _item.gId === item.gId')
   //     return (_item.isActive = _item.gId === item.gId)
   // })
-  await nextTick()
+  // await nextTick()
 }
 onMounted(() => {
   const defauleActive = localStorage.getItem('active') || ''
@@ -63,7 +62,7 @@ watch(active, (newVal, oldVal) => {
   const activeObj = fltternMap.value.find(item => item.name === newVal)
   console.log(activeObj, 'activeObj')
   const id = fltternMap.value.map(item => {
-    if (item.gId === activeObj.gId && item.deep <= activeObj.deep) {
+    if (item.gId === activeObj.gId && item.deep < activeObj.deep || item.deep === activeObj.deep && item.name === activeObj.name ) {
       item.isActive = true
     } else {
       item.isActive = false

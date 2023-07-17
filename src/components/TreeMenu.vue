@@ -3,14 +3,17 @@
 <script setup>
 import { ref, computed, onMounted, nextTick, toRef } from 'vue'
 import TreeMenu from './TreeMenu.vue'
+import { useBookStore } from '../store/useStore'
+const { store: bookStore, updateActive } = useBookStore()
 
 const props = defineProps({
   item: Object,
   children: Array,
   depth: Number,
-  active: String
 })
 const emit = defineEmits(['change'])
+
+const active = toRef(bookStore.state.active)
 let isShow = ref(false)
 const canClick = computed(() => {
   return {
@@ -44,6 +47,9 @@ const toggleExpand = () => {
 const handleChange = item => {
   console.log('item: ', item)
   props.item.isActive = true
+  updateActive(props.item.name)
+  console.log()
+  emit('change', item)
 }
 onMounted(async () => {
   // await nextTick()
